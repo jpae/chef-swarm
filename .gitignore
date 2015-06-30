@@ -1,0 +1,13 @@
+.autotest
+coverage
+.DS_Store
+pkg
+tags
+*/tags
+*~
+load-tester
+
+# IDE files
+.project
+
+examples
