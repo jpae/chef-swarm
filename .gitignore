@@ -5,9 +5,10 @@ pkg
 tags
 */tags
 *~
-load-tester
+chef-swarm
 
 # IDE files
 .project
 
-examples
+orgs
+config.toml

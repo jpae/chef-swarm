@@ -2,6 +2,7 @@ package node
 
 import (
 	"crypto/rsa"
+	"crypto/tls"
 	"fmt"
 	client "github.com/paulmooring/chef-swarm/lib/client"
 	"io"
@@ -26,11 +27,19 @@ func NewNode(name string, server_url string, key_file string) (Node, error) {
 		return Node{}, err
 	}
 
+	tr := &http.Transport{
+		TLSClientConfig: &tls.Config{
+			InsecureSkipVerify: true,
+		},
+	}
+
 	node := Node{
 		Name:      name,
 		ServerURL: server_url,
 		Key:       key,
-		Client:    &http.Client{},
+		Client: &http.Client{
+			Transport: tr,
+		},
 	}
 
 	return node, nil

@@ -1,0 +1,10 @@
+server = "api.opscode.com"
+
+[organizations]
+  [organizations.example-org]
+  validator_name = "example-org-validator"
+  validator_key = "/opt/chef-swarm/orgs/example-org/example-org-validator.pem"
+  key_directory = "/opt/chef-swarm/orgs/example-org/nodes"
+  nodes = 10
+  runs = 1
+  stagger = true

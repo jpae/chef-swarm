@@ -2,22 +2,23 @@ package main
 
 import (
 	"fmt"
+	config "github.com/paulmooring/chef-swarm/lib/config"
 	node "github.com/paulmooring/chef-swarm/lib/node"
 	"os"
-	"strconv"
 )
 
-func node_run(node_num string) <-chan error {
+func node_run(node_num string, chef_uri string, key_dir string) <-chan error {
 	c := make(chan error)
 
 	go func() {
-		node, err := node.NewNode("test-node"+node_num, os.Args[1], "examples/nodes/test-node"+node_num+".pem")
+		node, err := node.NewNode("test-node"+node_num, chef_uri, key_dir+"/test-node"+node_num+".pem")
 		if err != nil {
 			c <- err
 		}
 
 		err = node.NormalRun()
 		if err != nil {
+			fmt.Println(err.Error())
 			c <- err
 		} else {
 			c <- nil
@@ -28,21 +29,37 @@ func node_run(node_num string) <-chan error {
 }
 
 func main() {
+	cfg, err := config.LoadConfig("./config.toml")
+	if err != nil {
+		fmt.Println(err.Error())
+		os.Exit(1)
+	}
+
+	var org_name string
+	var org_conf config.Org
+
+	for name, conf := range cfg.Organizations {
+		org_name = name
+		org_conf = conf
+
+		break
+	}
+
+	server_string := "https://" + cfg.Server + "/organizations/" + org_name
+
 	good := 0
 	bad := 0
 
-	num_ccrs, err := strconv.Atoi(os.Args[3])
 	if err != nil {
 		fmt.Println(err.Error())
 	}
-	for i := 1; i <= num_ccrs; i++ {
+	for i := 1; i <= org_conf.Runs; i++ {
 		var runs []<-chan error
-		num_nodes, err := strconv.Atoi(os.Args[2])
 		if err != nil {
 			fmt.Println("Error with num_nodes arg")
 		}
-		for i := 1; i <= num_nodes; i++ {
-			c := node_run(fmt.Sprintf("%d", i))
+		for i := 1; i <= org_conf.Nodes; i++ {
+			c := node_run(fmt.Sprintf("%d", i), server_string, org_conf.KeyDirectory)
 			runs = append(runs, c)
 		}
 
