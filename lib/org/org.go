@@ -2,10 +2,12 @@ package org
 
 import (
 	"encoding/json"
+	"fmt"
 	config "github.com/paulmooring/chef-swarm/lib/config"
 	node "github.com/paulmooring/chef-swarm/lib/node"
 	"io"
 	"os"
+	"sync"
 )
 
 type Org struct {
@@ -56,7 +58,7 @@ func (o Org) CreateNode(name string) error {
 	}
 	file.Close()
 
-	node_client, err := node.NewNode(o.Config.ValidatorName, o.ServerURI, o.Config.ValidatorKey)
+	node_client, err := node.NewNode(name, o.ServerURI, filename)
 	if err != nil {
 		return err
 	}
@@ -66,6 +68,48 @@ func (o Org) CreateNode(name string) error {
 	if err != nil {
 		return err
 	}
+
+	return nil
+}
+
+func (o Org) ChefRuns() error {
+	nodes := make([]string, o.Config.Nodes)
+
+	for i := 0; i < o.Config.Nodes; i++ {
+		nodes[i] = fmt.Sprintf("swarm-node%d", i)
+		resp_code, _, err := o.Validator.Get("/clients/" + nodes[i])
+		if err != nil {
+			return err
+		}
+		if resp_code == 404 {
+			err = o.CreateNode(nodes[i])
+			if err != nil {
+				return err
+			}
+		}
+	}
+
+	var wg sync.WaitGroup
+	wg.Add(o.Config.Nodes)
+	for _, node_name := range nodes {
+		go func(name string) {
+			defer wg.Done()
+
+			nd, err := node.NewNode(name, o.ServerURI, o.Config.KeyDirectory+"/"+name+".pem")
+			if err != nil {
+				fmt.Println(err.Error())
+			}
+
+			for i := 0; i < o.Config.Runs; i++ {
+				err = nd.NormalRun()
+				if err != nil {
+					fmt.Println(err.Error())
+				}
+			}
+		}(node_name)
+	}
+
+	wg.Wait()
 
 	return nil
 }
