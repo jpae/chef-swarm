@@ -4,7 +4,16 @@ import (
 	"bytes"
 )
 
-func node_body(name string) *bytes.Buffer {
+func ClientBody(name string) *bytes.Buffer {
+	body := `{
+  "name": "` + name + `",
+  "admin": false
+}`
+
+	return string_to_reader(body)
+}
+
+func NodeBody(name string) *bytes.Buffer {
 	body := `{
   "name":"` + name + `",
   "chef_environment": "_default",
@@ -20,7 +29,7 @@ func node_body(name string) *bytes.Buffer {
 	return string_to_reader(body)
 }
 
-func end_run_body(run_uuid string, start_time string) *bytes.Buffer {
+func EndRunBody(run_uuid string, start_time string) *bytes.Buffer {
 	body := `{
   "action": "end",
   "resources": [
@@ -48,7 +57,7 @@ func end_run_body(run_uuid string, start_time string) *bytes.Buffer {
 	return string_to_reader(body)
 }
 
-func start_run_body(run_uuid string, start_time string) *bytes.Buffer {
+func StartRunBody(run_uuid string, start_time string) *bytes.Buffer {
 	body := `{
   "action": "start",
   "run_id": "` + run_uuid + `",
@@ -58,7 +67,7 @@ func start_run_body(run_uuid string, start_time string) *bytes.Buffer {
 	return string_to_reader(body)
 }
 
-func cookbook_versions_body() *bytes.Buffer {
+func CookbookVersionsBody() *bytes.Buffer {
 	body := `{
   "run_list": [
     "apt",

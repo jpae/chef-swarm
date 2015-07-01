@@ -8,10 +8,10 @@ import (
 
 type Config struct {
 	Server        string
-	Organizations map[string]Org
+	Organizations map[string]OrgConfig
 }
 
-type Org struct {
+type OrgConfig struct {
 	ValidatorName string
 	ValidatorKey  string
 	KeyDirectory  string

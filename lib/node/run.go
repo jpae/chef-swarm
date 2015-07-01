@@ -69,14 +69,14 @@ func (nd Node) runWrapper(run_type string) error {
 	}
 	sleep_splay(100)
 
-	body := start_run_body(run_uuid, start_time)
+	body := StartRunBody(run_uuid, start_time)
 	_, _, err = nd.Post("/reports/nodes/"+nd.Name+"/runs", body)
 	if err != nil {
 		return err
 	}
 	sleep_splay(50)
 
-	body = cookbook_versions_body()
+	body = CookbookVersionsBody()
 	_, _, err = nd.Post("/environments/_default/cookbook_versions", body)
 	if err != nil {
 		return err
@@ -89,14 +89,14 @@ func (nd Node) runWrapper(run_type string) error {
 	}
 	sleep_splay(1000)
 
-	body = node_body(nd.Name)
+	body = NodeBody(nd.Name)
 	_, _, err = nd.Put("/nodes/"+nd.Name, body)
 	if err != nil {
 		return err
 	}
 	sleep_splay(200)
 
-	body = end_run_body(run_uuid, start_time)
+	body = EndRunBody(run_uuid, start_time)
 	_, _, err = nd.Post("/reports/nodes/"+nd.Name+"/runs/"+run_uuid, body)
 	if err != nil {
 		return err

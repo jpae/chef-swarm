@@ -36,7 +36,7 @@ func main() {
 	}
 
 	var org_name string
-	var org_conf config.Org
+	var org_conf config.OrgConfig
 
 	for name, conf := range cfg.Organizations {
 		org_name = name
