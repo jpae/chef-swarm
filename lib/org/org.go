@@ -101,7 +101,11 @@ func (o Org) ChefRuns() error {
 			}
 
 			for i := 0; i < o.Config.Runs; i++ {
-				err = nd.NormalRun()
+				if (i % 2) == 0 {
+					err = nd.NormalRun()
+				} else {
+					err = nd.SearchRun()
+				}
 				if err != nil {
 					fmt.Println(err.Error())
 				}
