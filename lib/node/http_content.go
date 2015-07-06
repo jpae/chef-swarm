@@ -118,13 +118,33 @@ func CookbookVersionsBody() *bytes.Buffer {
 	return string_to_reader(body)
 }
 
+func DataBagItemBody(name string) *bytes.Buffer {
+	body := `{
+  "id": "` + name + `",
+  "content": {
+    "updated_at": "` + timestamp() + `",
+    "text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse scelerisque dolor vitae vestibulum egestas. Curabitur vestibulum, odio quis sollicitudin condimentum, dui metus ullamcorper ligula, id vulputate odio arcu in nisi. Praesent porttitor semper ipsum, id bibendum nisi iaculis vitae. Donec eleifend nisi sem, ac molestie nisl condimentum ac. Interdum et malesuada fames ac ante ipsum primis in faucibus. Donec elementum ut risus eget hendrerit. In quis risus felis. Mauris non tellus convallis, fermentum enim et, sollicitudin justo. Nulla varius vitae augue ac pellentesque. In non consectetur sem.
+
+Sed dolor orci, placerat non eleifend ullamcorper, faucibus et lectus. In vel erat at lorem egestas sodales et nec magna. Cras vel semper libero, sed placerat tellus. Cras ac nulla non urna scelerisque commodo sed vel lacus. Vestibulum sed lobortis sapien. Praesent euismod dignissim lectus eget cursus. Proin at est vitae libero pretium tincidunt. Vestibulum suscipit pellentesque lectus eu luctus. Sed orci tellus, auctor id massa vitae, sagittis auctor libero. Donec enim velit, pretium eu posuere et, semper in enim. Donec consequat dapibus rhoncus. Nullam sodales placerat rutrum. Aenean id pellentesque ex, vitae convallis ligula. Etiam hendrerit at justo et tincidunt. Fusce rhoncus tortor sed lacus varius egestas.
+
+Etiam molestie ante odio, et pharetra ex scelerisque id. Pellentesque volutpat dolor dignissim dolor porta porttitor. Praesent nec lorem nec arcu pulvinar mattis. Etiam luctus gravida facilisis. Fusce metus lorem, auctor quis quam ac, congue volutpat massa. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Integer eget turpis nulla. Donec ut eleifend lectus, quis sodales ex. Praesent finibus justo quis enim auctor pretium. In maximus felis neque, convallis tincidunt ex euismod sed. Aenean luctus nibh erat, ac bibendum purus sodales non. Morbi vehicula massa felis, sit amet facilisis velit malesuada ac. Morbi et metus nunc. Maecenas cursus aliquam dui. Nullam pellentesque finibus nisl nec efficitur. Phasellus pretium nisl condimentum dapibus cursus.
+
+Suspendisse ultricies urna id lectus aliquam lacinia. Mauris cursus vulputate eros sit amet lacinia. Integer ultricies viverra justo eget aliquam. Cras porttitor nibh velit, nec dictum elit cursus id. Praesent ultricies lorem velit, a accumsan velit tincidunt vitae. Duis sed nulla maximus, varius sapien sed, facilisis felis. Nunc porttitor nisl sed mollis malesuada. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam vel ipsum eget tellus hendrerit commodo. Pellentesque sapien ex, ultrices quis tincidunt non, malesuada in tortor. Nam sit amet dui ante. Duis rutrum mollis ligula, vel euismod ligula pulvinar vel. Etiam in erat et massa fermentum finibus convallis vitae odio. Aenean est ex, porta quis auctor eu, vehicula sed velit. Aliquam facilisis orci lectus, nec efficitur augue consequat et.
+
+Aliquam erat volutpat. Vestibulum vitae mi non nulla sollicitudin sollicitudin quis in ipsum. Ut vel ornare sapien. Ut posuere dictum risus, vel dignissim massa venenatis sed. Quisque vestibulum, nibh ut accumsan maximus, nulla ipsum viverra mi, at eleifend neque nisi nec urna. In fermentum fringilla posuere. Pellentesque mauris ligula, egestas ut fringilla vitae, efficitur a felis. Ut est massa, rhoncus vel diam bibendum, volutpat dictum diam. Morbi tortor libero, mollis ut tincidunt id, feugiat ut sapien."
+  }
+}`
+
+	return string_to_reader(body)
+}
+
 func NodeBody(name string) *bytes.Buffer {
 	body := `{
   "name":"` + name + `",
   "chef_environment": "_default",
   "chef_environment": "rs-prod",
   "run_list": [
-    "role[base]"
+    ` + `"role[base]"` + `
   ],
 	"automatic": {
 		"languages": {

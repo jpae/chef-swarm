@@ -31,11 +31,39 @@ func (nd Node) getDataBag(bag_name string, item_name string) error {
 	return nil
 }
 
+func (nd Node) writeDataBag(bag_name string, item_name string) error {
+	body := DataBagItemBody(item_name)
+	_, _, err := nd.Put("/data/"+bag_name+"/"+item_name, body)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func (nd Node) runBody(run_type string) error {
 	switch run_type {
 	case "normal":
 		nd.dataSearch()
 		sleep_splay(1200)
+		nd.nodeSearch()
+		sleep_splay(1000)
+		nd.getDataBag("test", "item1")
+		sleep_splay(750)
+		nd.getDataBag("test", "item15")
+		sleep_splay(5000)
+	case "search":
+		nd.dataSearch()
+		sleep_splay(1200)
+		nd.getDataBag("test", "item1")
+		sleep_splay(750)
+		nd.writeDataBag("test", "item10")
+		nd.writeDataBag("test", "item11")
+		nd.nodeSearch()
+		sleep_splay(1000)
+		nd.dataSearch()
+		sleep_splay(800)
+		nd.nodeSearch()
 		nd.nodeSearch()
 		sleep_splay(1000)
 		nd.getDataBag("test", "item1")
@@ -116,6 +144,15 @@ func (nd Node) EmptyRun() error {
 
 func (nd Node) NormalRun() error {
 	err := nd.runWrapper("normal")
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (nd Node) SearchRun() error {
+	err := nd.runWrapper("search")
 	if err != nil {
 		return err
 	}
